@@ -1,0 +1,20 @@
+node_modules/
+.next/
+dist/
+out/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+
+# Local data — private project records never belong in git
+data/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+.env
+.env.local
+.env*.local
+reports/
+evidence/

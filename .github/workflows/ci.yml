@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      # Keeps CI off the network: the end-to-end test crawls a real site, and a
+      # flaky runner network should not read as a broken build.
+      LAUNCHOS_SKIP_NETWORK_TESTS: '1'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type-check the dashboard
+        run: npm run lint
+
+      - name: Type-check the core and CLI
+        run: npx tsc -p tsconfig.core.json --noEmit
+
+      - name: Tests
+        run: npm test
+
+      - name: Build the core and CLI
+        run: npm run build:core
+
+      - name: Smoke-test the CLI
+        run: |
+          node bin/launchos.mjs init --db ./ci.db
+          node bin/launchos.mjs doctor --db ./ci.db --json > doctor.json
+          node -e "
+            const d = require('./doctor.json');
+            const bad = d.filter(c => c.status === 'fail');
+            if (bad.length) { console.error(bad); process.exit(1); }
+            console.log('doctor: ' + d.length + ' checks, none failing');
+          "
+
+      - name: Production build
+        run: npm run build

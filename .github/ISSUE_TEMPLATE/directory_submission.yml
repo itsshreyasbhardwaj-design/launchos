@@ -1,0 +1,43 @@
+name: Add a directory
+description: Propose a destination for the registry
+labels: [registry]
+body:
+  - type: input
+    id: name
+    attributes: { label: Name }
+    validations: { required: true }
+  - type: input
+    id: url
+    attributes: { label: Official URL }
+    validations: { required: true }
+  - type: input
+    id: submission
+    attributes:
+      label: Submission URL
+      description: Leave blank if you are not certain of the exact path.
+  - type: dropdown
+    id: free
+    attributes:
+      label: Is free submission available?
+      options:
+        - "free — I opened the submission flow and it costs nothing"
+        - "freemium — a free tier exists alongside paid options"
+        - "paid — submission requires payment"
+        - "unknown — I have not checked"
+    validations: { required: true }
+  - type: textarea
+    id: verification
+    attributes:
+      label: How did you verify this?
+      description: What did you open, and what did you see? This goes in the registry.
+    validations: { required: true }
+  - type: textarea
+    id: eligibility
+    attributes:
+      label: Eligibility requirements
+      description: Account needed? Approval queue? Geographic or category restrictions?
+  - type: textarea
+    id: limits
+    attributes:
+      label: Documented field limits
+      description: Only ones you read in their own documentation. Leave blank otherwise.

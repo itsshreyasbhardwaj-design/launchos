@@ -1,0 +1,47 @@
+name: Bug report
+description: Something behaves incorrectly
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please do not paste the contents of `data/launchos.db` or any real
+        project data. A redacted description of the shape of the data is enough.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Include the exact command or the page you were on.
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations: { required: true }
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. launchos project add --name ...
+        2. launchos audit
+        3. ...
+    validations: { required: true }
+  - type: input
+    id: node
+    attributes:
+      label: Node version
+      description: "`node -v` — LaunchOS needs 22.5 or newer"
+    validations: { required: true }
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where
+      options: [CLI, Dashboard, Both, Tests]
+    validations: { required: true }
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: Run with LAUNCHOS_DEBUG=1 for a stack trace.
+      render: shell

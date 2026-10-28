@@ -1,0 +1,92 @@
+name: Scheduled audit
+
+# OPT-IN AND DISABLED BY DEFAULT.
+#
+# Enable it only for a domain you control:
+#   1. Uncomment the schedule below.
+#   2. Set repository variable LAUNCHOS_ENABLE_SCHEDULED_AUDIT to "true".
+#   3. Set repository variable LAUNCHOS_AUDIT_URL to your site.
+#
+# This workflow crawls, analyses and reports. It never publishes anything.
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Site to audit (must be a domain you control)'
+        required: true
+  # schedule:
+  #   - cron: '0 6 * * 1'   # Mondays, 06:00 UTC
+
+concurrency:
+  group: scheduled-audit
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event_name == 'workflow_dispatch' || vars.LAUNCHOS_ENABLE_SCHEDULED_AUDIT == 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build:core
+
+      - name: Audit
+        id: audit
+        env:
+          TARGET: ${{ github.event.inputs.url || vars.LAUNCHOS_AUDIT_URL }}
+        run: |
+          if [ -z "$TARGET" ]; then
+            echo "No target URL. Set vars.LAUNCHOS_AUDIT_URL or pass one to workflow_dispatch." >&2
+            exit 1
+          fi
+          HOST=$(node -e "process.stdout.write(new URL(process.env.TARGET).host)")
+          node bin/launchos.mjs init --db ./audit.db
+          node bin/launchos.mjs project add --db ./audit.db --name "Scheduled" --url "$TARGET"
+          node bin/launchos.mjs domains authorize "$HOST" --db ./audit.db \
+            --note "Scheduled audit of a domain this repository's owner controls" --by github-actions
+          node bin/launchos.mjs audit --db ./audit.db --pages 25 --depth 2 --json > audit.json
+          node bin/launchos.mjs audit findings --db ./audit.db --json > findings.json
+          node -e "
+            const f = require('./findings.json');
+            const blocking = f.filter(x => x.severity === 'critical' || x.severity === 'high');
+            require('fs').appendFileSync(process.env.GITHUB_OUTPUT, 'blocking=' + blocking.length + '\n');
+            const body = blocking.length
+              ? blocking.map(x => '### ' + x.severity.toUpperCase() + ': ' + x.title + '\n\n' +
+                  (x.pageUrl ? '**Page:** ' + x.pageUrl + '\n\n' : '') +
+                  '**Evidence:**\n\`\`\`\n' + x.evidence + '\n\`\`\`\n\n' +
+                  '**Why it matters:** ' + x.impactHypothesis + '\n\n' +
+                  '**Fix:** ' + x.suggestion + '\n\n' +
+                  '**Verify:** ' + x.verification).join('\n\n---\n\n')
+              : 'No critical or high-severity findings.';
+            require('fs').writeFileSync('issue.md', body);
+          "
+
+      - name: Open an issue when something is blocking
+        if: steps.audit.outputs.blocking != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Scheduled audit: ${{ steps.audit.outputs.blocking }} blocking finding(s)" \
+            --body-file issue.md \
+            --label "audit"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: audit-report
+          path: |
+            audit.json
+            findings.json
+          retention-days: 14

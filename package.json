@@ -1,0 +1,39 @@
+{
+  "name": "launchos",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Free, open-source post-launch growth, SEO, GEO and distribution operating system.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "launchos": "./bin/launchos.mjs"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "dev": "next dev -p 3211",
+    "build": "next build",
+    "start": "next start",
+    "lint": "tsc --noEmit",
+    "build:core": "tsc -p tsconfig.core.json && node -e \"require('fs').writeFileSync('dist/package.json','{\\\"type\\\":\\\"commonjs\\\"}')\"",
+    "cli": "npm run build:core --silent && node bin/launchos.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "next": "15.5.4",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.1.13",
+    "@types/node": "22.18.1",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.9",
+    "tailwindcss": "4.1.13",
+    "typescript": "5.9.2",
+    "vitest": "3.2.4"
+  }
+}

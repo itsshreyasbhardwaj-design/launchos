@@ -1,0 +1,40 @@
+name: Feature request
+description: Suggest something LaunchOS should do
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening this, please check [docs/ROADMAP.md](../blob/main/docs/ROADMAP.md).
+        Some things are deliberately not planned: anything that submits, posts
+        or sends on a user's behalf, anything requiring a paid API, and any
+        metric LaunchOS cannot evidence.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you unable to do today?
+    validations: { required: true }
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would like
+    validations: { required: true }
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Where would the data come from?
+      description: >
+        If this feature reports a number, say which free, reliable source
+        provides it. A feature that would need an invented number will not be
+        merged.
+    validations: { required: true }
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints
+      options:
+        - label: This does not require a paid service
+          required: true
+        - label: This does not publish, submit or send anything automatically
+          required: true

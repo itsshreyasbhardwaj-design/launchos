@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+/*
+ * LaunchOS design tokens.
+ *
+ * One palette, defined once, used by both themes. Colours come from the brand
+ * spec: midnight navy, electric blue, cyan, green, off-white, slate.
+ */
+@theme {
+  --color-navy-950: #050a14;
+  --color-navy-900: #080f1f;
+  --color-navy-850: #0c1526;
+  --color-navy-800: #111c33;
+  --color-navy-700: #1a2742;
+  --color-blue-500: #2563eb;
+  --color-blue-400: #3b82f6;
+  --color-cyan-500: #06b6d4;
+  --color-green-500: #10b981;
+  --color-amber-500: #f59e0b;
+  --color-rose-500: #e11d48;
+  --color-off: #f8fafc;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+:root {
+  --bg: #f6f8fb;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --border: #e2e8f0;
+  --text: #0b1220;
+  --text-dim: #51607a;
+  --accent: #2563eb;
+  --accent-2: #0891b2;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"],
+html.dark {
+  --bg: #080f1f;
+  --surface: #0c1526;
+  --surface-2: #111c33;
+  --border: #1d2a45;
+  --text: #f8fafc;
+  --text-dim: #94a3b8;
+  --accent: #3b82f6;
+  --accent-2: #22d3ee;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #080f1f;
+    --surface: #0c1526;
+    --surface-2: #111c33;
+    --border: #1d2a45;
+    --text: #f8fafc;
+    --text-dim: #94a3b8;
+    --accent: #3b82f6;
+    --accent-2: #22d3ee;
+    color-scheme: dark;
+  }
+}
+
+* { border-color: var(--border); }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------------------------------------------------------------- primitives */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  border-radius: 0.5rem; padding: 0.45rem 0.8rem;
+  font-size: 0.8125rem; font-weight: 550; line-height: 1.2;
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+  cursor: pointer; transition: background 120ms ease, border-color 120ms ease, opacity 120ms ease;
+}
+.btn:hover { border-color: var(--accent); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.btn-primary {
+  background: var(--accent); border-color: var(--accent); color: #fff;
+}
+.btn-primary:hover { filter: brightness(1.08); }
+.btn-ghost { background: transparent; }
+
+.input, .select, .textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.8125rem;
+  color: var(--text);
+  font-family: inherit;
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: 2px solid color-mix(in oklab, var(--accent) 45%, transparent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+.textarea { min-height: 5rem; resize: vertical; }
+.label { display: block; font-size: 0.6875rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.25rem; font-weight: 600; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  font-size: 0.6875rem; font-weight: 600; padding: 0.15rem 0.45rem;
+  border-radius: 0.375rem; border: 1px solid var(--border); background: var(--surface-2);
+  white-space: nowrap;
+}
+.badge-critical, .badge-fail, .badge-high, .badge-blocked, .badge-not_eligible, .badge-missing, .badge-rejected { background: color-mix(in oklab, #e11d48 16%, transparent); border-color: color-mix(in oklab, #e11d48 40%, transparent); color: #e11d48; }
+.badge-medium, .badge-unknown, .badge-manual, .badge-needs_check, .badge-paid_only, .badge-pending_review, .badge-needs_update, .badge-awaiting_approval { background: color-mix(in oklab, #f59e0b 16%, transparent); border-color: color-mix(in oklab, #f59e0b 40%, transparent); color: #b45309; }
+:root[data-theme="dark"] .badge-medium, html.dark .badge-medium,
+:root[data-theme="dark"] .badge-unknown, html.dark .badge-unknown { color: #fbbf24; }
+.badge-pass, .badge-ready, .badge-eligible, .badge-live, .badge-free, .badge-approved, .badge-content_ready, .badge-ready_for_submission { background: color-mix(in oklab, #10b981 16%, transparent); border-color: color-mix(in oklab, #10b981 40%, transparent); color: #047857; }
+:root[data-theme="dark"] .badge-pass, html.dark .badge-pass,
+:root[data-theme="dark"] .badge-eligible, html.dark .badge-eligible,
+:root[data-theme="dark"] .badge-live, html.dark .badge-live { color: #34d399; }
+.badge-low, .badge-info, .badge-draft, .badge-not_researched { color: var(--text-dim); }
+
+table.data { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+table.data th {
+  text-align: left; font-size: 0.6875rem; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--text-dim); font-weight: 600; padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+table.data td { padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.data tr:last-child td { border-bottom: none; }
+table.data tbody tr:hover { background: var(--surface-2); }
+
+pre.code {
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 0.5rem;
+  padding: 0.7rem 0.8rem; font-family: var(--font-mono); font-size: 0.75rem;
+  overflow-x: auto; line-height: 1.55; white-space: pre;
+}
+
+.note { border-left: 3px solid var(--accent-2); padding: 0.5rem 0.75rem; background: var(--surface-2); border-radius: 0 0.4rem 0.4rem 0; font-size: 0.8125rem; color: var(--text-dim); }
+.note-warn { border-left-color: #f59e0b; }
+
+a { color: inherit; }
+a.link { color: var(--accent); text-decoration: none; }
+a.link:hover { text-decoration: underline; }
+
+/* Reduce motion for anyone who asked for it. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
