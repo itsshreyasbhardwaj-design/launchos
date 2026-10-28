@@ -11,7 +11,7 @@ It runs entirely on your own machine. There is no account, no subscription, no
 AI API key, and no paid tier. The database is a file.
 
 ```bash
-git clone <your-fork> launchos && cd launchos
+git clone https://github.com/itsshreyasbhardwaj-design/launchos.git && cd launchos
 npm install
 npm run build:core          # compiles the shared core for the CLI
 node bin/launchos.mjs init  # creates data/launchos.db and seeds the registries

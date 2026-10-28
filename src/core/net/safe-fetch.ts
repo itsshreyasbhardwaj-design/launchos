@@ -28,7 +28,7 @@ export const DEFAULTS = {
   timeoutMs: Number(process.env.LAUNCHOS_CRAWL_TIMEOUT_MS || 15000),
   maxBytes: 3_000_000,
   maxRedirects: 5,
-  userAgent: process.env.LAUNCHOS_USER_AGENT || 'LaunchOS-Audit/0.1 (+https://github.com/)',
+  userAgent: process.env.LAUNCHOS_USER_AGENT || 'LaunchOS-Audit/0.1 (+https://github.com/itsshreyasbhardwaj-design/launchos)',
 };
 
 const ALLOW_PRIVATE = process.env.LAUNCHOS_ALLOW_PRIVATE_HOSTS === '1';

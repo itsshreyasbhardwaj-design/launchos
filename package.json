@@ -35,5 +35,25 @@
     "tailwindcss": "4.1.13",
     "typescript": "5.9.2",
     "vitest": "3.2.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsshreyasbhardwaj-design/launchos.git"
+  },
+  "bugs": {
+    "url": "https://github.com/itsshreyasbhardwaj-design/launchos/issues"
+  },
+  "homepage": "https://github.com/itsshreyasbhardwaj-design/launchos#readme",
+  "keywords": [
+    "seo",
+    "geo",
+    "aeo",
+    "growth",
+    "marketing",
+    "site-audit",
+    "structured-data",
+    "indexnow",
+    "local-first",
+    "cli"
+  ]
 }

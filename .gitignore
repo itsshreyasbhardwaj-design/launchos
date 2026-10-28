@@ -7,8 +7,13 @@ coverage/
 next-env.d.ts
 .DS_Store
 
-# Local data — private project records never belong in git
-data/
+# Local data — private project records never belong in git.
+# These are anchored with a leading slash on purpose: an unanchored "data/"
+# also matches src/core/data/ (the directory registry) and would silently
+# drop source files from the repository.
+/data/
+/reports/
+/evidence/
 *.db
 *.db-journal
 *.db-wal
@@ -16,5 +21,3 @@ data/
 .env
 .env.local
 .env*.local
-reports/
-evidence/
