@@ -1,11 +1,26 @@
 {
+  // The core and CLI compile to CommonJS in dist/, which bin/launchos.mjs loads.
+  //
+  // TypeScript 7 removed moduleResolution "node" (node10), and node16/nodenext
+  // cannot be used here: they force module to match, and because the root
+  // package.json is "type": "module" tsc would then emit ESM — breaking the
+  // CommonJS dist that build:core writes a {"type":"commonjs"} manifest for.
+  // "bundler" is the one resolution mode TS 7 still pairs with module
+  // "commonjs", and it matches what this source actually does: extensionless
+  // relative imports that CommonJS resolves at runtime.
+  //
+  // "bundler" does not auto-include @types, so node has to be named. That also
+  // keeps this build independent of the app's React types, which it never uses.
   "compilerOptions": {
     "target": "ES2022",
     "lib": [
       "ES2022"
     ],
     "module": "commonjs",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "types": [
+      "node"
+    ],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
