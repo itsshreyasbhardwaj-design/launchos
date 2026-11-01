@@ -9,6 +9,7 @@ updates:
       all:
         patterns: ['*']
   - package-ecosystem: github-actions
+    open-pull-requests-limit: 0
     directory: /
     schedule:
       interval: monthly
